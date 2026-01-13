@@ -56,3 +56,13 @@ public class Person {
                 '}';
     }
 }
+/*
+This is a functional programming demonstration that shows how to filter and process a list of people using different criteria. Think of it like a simple database of people where you can ask questions like "show me all active people" or "find all adults from Stockholm."
+1. Person Class - The Data Container
+This is like a digital business card that holds information about a person:
+Name (like "Amina")
+Age (like 22)
+City (like "Stockholm")
+Active status (true/false - maybe if they're a current member of something)
+It's just a simple data holder with getters/setters and a way to print the person's info nicely.
+ */

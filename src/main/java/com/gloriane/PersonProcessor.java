@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PersonProcessor {
-    public static List<Person> findPeople(List<Person> list, PersonRule rule)
-    public static void applyToMatching(List<Person> list, PersonRule rule, PersonAction action) {
-
+    public static List<Person> findPeople(List<Person> list, PersonRule rule) {
         List<Person> result = new ArrayList<>();
         for (Person person : list) {
             if (rule.apply(person)) {
@@ -19,19 +17,16 @@ public class PersonProcessor {
     public static void applyToMatching(List<Person> list, PersonRule rule, PersonAction action) {
         for (Person person : list) {
             if (rule.apply(person)) {
-                if (action.getPrintName() != null) {
-                    System.out.println(action.getPrintName() + ": " + person.getName());
-                }
-                if (action.getSendEmail() != null) {
-                    // Simulate sending an email
-                    System.out.println("Sending email to: " + person.getName());
-                }
+                action.perform(person);
             }
-
         }
     }
+
+    /*
+ 4. PersonProcessor Class - The Worker
+This class does the actual work:
+findPeople(): Takes a list of people and a rule, returns only people who pass the test
+applyToMatching(): Takes a list, finds people who match a rule, then performs an action on them
+     */
 }
-/*
-Processes Person lists using rules and actions.
-Connection to Main: Main calls these static methods to filter and process people.
- */
+

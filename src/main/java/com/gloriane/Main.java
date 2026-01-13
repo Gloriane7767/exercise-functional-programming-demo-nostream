@@ -16,46 +16,39 @@ public class Main {
             System.out.println(person);
         }
 
-    // Rules
-        PersonRule active = (Person person) -> person.isActive();
-        PersonRule adults = (Person person) -> person.getAge() >= 18;
-        PersonRule fromStockholm = (Person person) -> person.getCity().equals("Stockholm");
-    /*
+        // Rules using lambda expressions for filtering
         PersonRule isActive = person -> person.isActive();
         PersonRule isAdult = person -> person.getAge() >= 18;
         PersonRule livesInStockholm = person -> person.getCity().equals("Stockholm");
-    */
-        // Using findPeople - returns a list
-        List<Person> activePeople = PersonProcessor.findPeople (people, isActive);
-        List<Person> adultPeople = PersonProcessor.findPeople (people, isAdult);
 
-        // Using applyToMatching - performs actions
-        PersonAction activeAction = new PersonAction("Active", null);
-        PersonProcessor.applyToMatching(people, isActive, activeAction);
+        // Rules using lambda expressions for actions
+        PersonAction printAction = person -> {
+            System.out.println("Printing name to: " + person.getName());
+        };
+        PersonAction emailAction = person -> {
+            System.out.println("Sending email to: " + person.getName());
+        };
 
-        PersonAction adultAction = new PersonAction("Adult", null);
-        PersonProcessor.applyToMatching(people, isAdult, adultAction);
+        PersonAction combinedAction = person -> {
+            System.out.println("Printing name to: " + person.getName());
+            System.out.println("Sending email to: " + person.getName());
+        };
 
-        // Combine rules using lambda expressions
-        PersonRule ActiveAndAdult = (Person person) -> active.apply(person) && adults.apply(person);
-        PersonRule AdultOrStockholm = (Person person) -> adults.apply(person) || livesInStockholm.apply(person);
-        PersonRule notActive = (Person person) -> !isActive.apply(person);
+    // Rules using lambda expressions for processing
+        System.out.println(".................Active people:..............");
+        List<Person> activePeople = PersonProcessor.findPeople(people, isActive);
+        activePeople.forEach(System.out::println);
 
-        PersonRule activeAndAdult = person -> isActive.apply(person) && isAdult.apply(person);
-        PersonAction activeAdultAction = new PersonAction("Active Adult", null);
-        PersonProcessor.applyToMatching(people, activeAndAdult, activeAdultAction);
+        System.out.println("..................Adults:.................");
+        List<Person> adultPeople = PersonProcessor.findPeople(people, isAdult);
+        adultPeople.forEach(System.out::println);
 
-        System.out.println("\nActive people:");
-        List<Person> activePeople2 = filterPeople(people, active);
-        activePeople2.forEach(System.out::println);
-
-        System.out.println("\nAdults:");
-        List<Person> adultPeople2 = filterPeople(people, adults);
-        adultPeople2.forEach(System.out::println);
-
-        System.out.println("\nAdults from Stockholm:");
-        List<Person> stockholmAdults = filterPeople(people, (person) -> adults.apply(person) && fromStockholm.apply(person));
+        System.out.println("......Adults from Stockholm:.....");
+        List<Person> stockholmAdults = PersonProcessor.findPeople(people, (person) -> isAdult.apply(person) && livesInStockholm.apply(person));
         stockholmAdults.forEach(System.out::println);
+
+        System.out.println("......Applying combined action to active people:.....");
+        PersonProcessor.applyToMatching(people, isActive, combinedAction);
     }
 
     // Imperative Style
