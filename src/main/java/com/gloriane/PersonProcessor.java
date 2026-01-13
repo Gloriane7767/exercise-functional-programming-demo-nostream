@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PersonProcessor {
-    public static List<Person> findPeople(List<Person> list, PersonRule rule) {
+    public static List<Person> findPeople(List<Person> list, PersonRule rule)
+    public static void applyToMatching(List<Person> list, PersonRule rule, PersonAction action) {
+
         List<Person> result = new ArrayList<>();
         for (Person person : list) {
             if (rule.apply(person)) {
@@ -29,3 +31,7 @@ public class PersonProcessor {
         }
     }
 }
+/*
+Processes Person lists using rules and actions.
+Connection to Main: Main calls these static methods to filter and process people.
+ */

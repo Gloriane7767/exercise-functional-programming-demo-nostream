@@ -20,11 +20,11 @@ public class Main {
         PersonRule active = (Person person) -> person.isActive();
         PersonRule adults = (Person person) -> person.getAge() >= 18;
         PersonRule fromStockholm = (Person person) -> person.getCity().equals("Stockholm");
-
+    /*
         PersonRule isActive = person -> person.isActive();
         PersonRule isAdult = person -> person.getAge() >= 18;
         PersonRule livesInStockholm = person -> person.getCity().equals("Stockholm");
-
+    */
         // Using findPeople - returns a list
         List<Person> activePeople = PersonProcessor.findPeople (people, isActive);
         List<Person> adultPeople = PersonProcessor.findPeople (people, isAdult);
@@ -46,12 +46,12 @@ public class Main {
         PersonProcessor.applyToMatching(people, activeAndAdult, activeAdultAction);
 
         System.out.println("\nActive people:");
-        List<Person> activePeople = filterPeople(people, active);
-        activePeople.forEach(System.out::println);
+        List<Person> activePeople2 = filterPeople(people, active);
+        activePeople2.forEach(System.out::println);
 
         System.out.println("\nAdults:");
-        List<Person> adultPeople = filterPeople(people, adults);
-        adultPeople.forEach(System.out::println);
+        List<Person> adultPeople2 = filterPeople(people, adults);
+        adultPeople2.forEach(System.out::println);
 
         System.out.println("\nAdults from Stockholm:");
         List<Person> stockholmAdults = filterPeople(people, (person) -> adults.apply(person) && fromStockholm.apply(person));
@@ -68,3 +68,4 @@ public class Main {
         }
         return filteredPeople;
     }
+}
