@@ -25,10 +25,25 @@ public class Main {
         PersonRule isAdult = person -> person.getAge() >= 18;
         PersonRule livesInStockholm = person -> person.getCity().equals("Stockholm");
 
+        // Using findPeople - returns a list
+        List<Person> activePeople = PersonProcessor.findPeople (people, isActive);
+        List<Person> adultPeople = PersonProcessor.findPeople (people, isAdult);
+
+        // Using applyToMatching - performs actions
+        PersonAction activeAction = new PersonAction("Active", null);
+        PersonProcessor.applyToMatching(people, isActive, activeAction);
+
+        PersonAction adultAction = new PersonAction("Adult", null);
+        PersonProcessor.applyToMatching(people, isAdult, adultAction);
+
         // Combine rules using lambda expressions
-        PersonRule ActiveAndAdult = (Person person) -> isActive.apply(person) && adults.apply(person);
-        PersonRule adultOrStockholm = (Person person) -> isAdult.apply(person) || livesInStockholm.apply(person);
+        PersonRule ActiveAndAdult = (Person person) -> active.apply(person) && adults.apply(person);
+        PersonRule AdultOrStockholm = (Person person) -> adults.apply(person) || livesInStockholm.apply(person);
         PersonRule notActive = (Person person) -> !isActive.apply(person);
+
+        PersonRule activeAndAdult = person -> isActive.apply(person) && isAdult.apply(person);
+        PersonAction activeAdultAction = new PersonAction("Active Adult", null);
+        PersonProcessor.applyToMatching(people, activeAndAdult, activeAdultAction);
 
         System.out.println("\nActive people:");
         List<Person> activePeople = filterPeople(people, active);
@@ -42,6 +57,7 @@ public class Main {
         List<Person> stockholmAdults = filterPeople(people, (person) -> adults.apply(person) && fromStockholm.apply(person));
         stockholmAdults.forEach(System.out::println);
     }
+
     // Imperative Style
     public static List<Person> filterPeople(List<Person> people, PersonRule rule) {
         List<Person> filteredPeople = new ArrayList<>();
@@ -52,6 +68,3 @@ public class Main {
         }
         return filteredPeople;
     }
-}
-
-
