@@ -2,21 +2,22 @@ package com.gloriane;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
-public class PersonProcessor {
-    public static List<Person> findPeople(List<Person> list, PersonRule rule) {
+public class PersonProcessor { //replace PersonRule with Predicate<Person>
+    public static List<Person> findPeople(List<Person> list, Predicate<Person> rule) {
         List<Person> result = new ArrayList<>();
         for (Person person : list) {
-            if (rule.apply(person)) {
+            if (rule.test(person)) {
                 result.add(person);
             }
         }
         return result;
     }
-
-    public static void applyToMatching(List<Person> list, PersonRule rule, PersonAction action) {
+// same here
+    public static void applyToMatching(List<Person> list, Predicate<Person> rule, PersonAction action) {
         for (Person person : list) {
-            if (rule.apply(person)) {
+            if (rule.test(person)) {
                 action.perform(person);
             }
         }

@@ -1,6 +1,10 @@
 package com.gloriane;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
+import static java.util.stream.StreamSupport.stream;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,16 +19,29 @@ public class Main {
         for(Person person : people) {
             System.out.println(person);
         }
-
+    /*
         // Rules using lambda expressions for filtering
         PersonRule isActive = person -> person.isActive();
         PersonRule isAdult = person -> person.getAge() >= 18;
         PersonRule livesInStockholm = person -> person.getCity().equals("Stockholm");
+*/
+        // Using predefined method for filtering
+        Predicate<Person> isActive = person -> person.isActive();
+        Predicate<Person> isAdult = person -> person.getAge() >= 18;
+        Predicate<Person> livesInStockholm = person -> person.getCity().equals("Stockholm");
 
+    /*
         // Rules using lambda expressions for actions
-        PersonAction printAction = person -> {
-            System.out.println("Printing name to: " + person.getName());
+       PersonAction emailAction = person -> {
+            System.out.println("Sending email to: " + person.getName());
         };
+
+        PersonAction combinedAction = person -> {
+            System.out.println("Printing name to: " + person.getName());
+            System.out.println("Sending email to: " + person.getName());
+        };
+    */
+        // Using predefined method for actions
         PersonAction emailAction = person -> {
             System.out.println("Sending email to: " + person.getName());
         };
@@ -33,29 +50,33 @@ public class Main {
             System.out.println("Printing name to: " + person.getName());
             System.out.println("Sending email to: " + person.getName());
         };
-
     // Rules using lambda expressions for processing
         System.out.println(".................Active people:..............");
-        List<Person> activePeople = PersonProcessor.findPeople(people, isActive);
+        List<Person> activePeople = PersonProcessor.findPeople(people, (Predicate<Person>) isActive);
         activePeople.forEach(System.out::println);
 
         System.out.println("..................Adults:.................");
-        List<Person> adultPeople = PersonProcessor.findPeople(people, isAdult);
+        List<Person> adultPeople = PersonProcessor.findPeople(people, (Predicate<Person>) isAdult);
         adultPeople.forEach(System.out::println);
 
         System.out.println("......Adults from Stockholm:.....");
-        List<Person> stockholmAdults = PersonProcessor.findPeople(people, (person) -> isAdult.apply(person) && livesInStockholm.apply(person));
+        List<Person> stockholmAdults = PersonProcessor.findPeople(people, (person) -> isAdult.test(person) && livesInStockholm.test(person));
         stockholmAdults.forEach(System.out::println);
 
         System.out.println("......Applying combined action to active people:.....");
-        PersonProcessor.applyToMatching(people, isActive, combinedAction);
+        PersonProcessor.applyToMatching(people, (Predicate<Person>) isActive, combinedAction);
     }
 
+
+
+
+
+
     // Imperative Style
-    public static List<Person> filterPeople(List<Person> people, PersonRule rule) {
+    public static List<Person> filterPeople(List<Person> people, PersonRule filter) {
         List<Person> filteredPeople = new ArrayList<>();
         for (Person person : people) {
-            if (rule.apply(person)) {
+            if (filter.apply(person)) {
                 filteredPeople.add(person);
             }
         }
