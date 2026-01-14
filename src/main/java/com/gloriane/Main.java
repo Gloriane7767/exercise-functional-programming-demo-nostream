@@ -7,8 +7,6 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static java.util.stream.StreamSupport.stream;
-
 public class Main {
     public static void main(String[] args) {
         List<Person> people = List.of(
@@ -48,6 +46,21 @@ public class Main {
             System.out.println("Sending email to: " + person.getName());
         };
     */
+
+        Consumer<Person> printNameActionConsumer = person -> {
+            System.out.println("Printing name to: " + person.getName());
+        };
+
+        Consumer<Person> emailActionConsumer = person -> {
+            System.out.println("Sending email to: " + person.getName());
+        };
+
+        Consumer<Person> combinedActionConsumer = person -> {
+            System.out.println("Printing name to: " + person.getName());
+            System.out.println("Sending email to: " + person.getName());
+        };
+
+        /*
         // Using predefined method for actions
         PersonAction printNameAction = person -> {
             System.out.println("Printing name to: " + person.getName());
@@ -61,6 +74,7 @@ public class Main {
             System.out.println("Printing name to: " + person.getName());
             System.out.println("Sending email to: " + person.getName());
         };
+        */
 
     // Rules using lambda expressions for processing
         System.out.println(".................Active people:..............");
@@ -75,8 +89,8 @@ public class Main {
         List<Person> stockholmAdults = PersonProcessor.findPeople(people, (person) -> isAdult.test(person) && livesInStockholm.test(person));
         stockholmAdults.forEach(System.out::println);
 
-        System.out.println("......Applying combined action to active people:.....");
-        PersonProcessor.applyToMatching(people, (Predicate<Person>) isActive, combinedAction);
+       // System.out.println("......Applying combined action to active people:.....");
+        //PersonProcessor.applyToMatching(people, (Predicate<Person>) isActive, combinedAction);
 
         System.out.println("......Names of active people:.....");
         people.stream()
@@ -96,10 +110,10 @@ public class Main {
         System.out.println("Number of adults: " + adultCount);
 
         System.out.println("......People sorted by age:.....");
-        people.stream()
-                .sorted(Comparator.comparing(Person::getAge))
+        List<Person> sortedPeople = people.stream()
+                .sorted(Comparator.comparingInt(Person::getAge))
                 .collect(Collectors.toList());
-        people.forEach(System.out::println);
+        sortedPeople.forEach(System.out::println);
 
         System.out.println("......Find first active person in Stockholm:.....");
         Optional<Person> firstActiveInStockholm = people.stream()
@@ -109,7 +123,6 @@ public class Main {
         firstActiveInStockholm.ifPresent(person -> System.out.println("First active person in Stockholm: " + person));
 
     }
-
 
     // Imperative Style
     public static List<Person> filterPeople(List<Person> people, PersonRule filter) {
