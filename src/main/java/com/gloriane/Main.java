@@ -9,129 +9,130 @@ import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
+
         List<Person> people = List.of(
                 new Person("Amina", 22, "Stockholm", true),
                 new Person("Erik", 17, "Uppsala", true),
                 new Person("Noah", 34, "Stockholm", false),
                 new Person("Sara", 29, "Gothenburg", true),
                 new Person("Lina", 41, "Malmö", false),
-                new Person("Omar", 19, "Stockholm", true));
+                new Person("Omar", 19, "Stockholm", true)
+        );
 
-        for(Person person : people) {
-            System.out.println(person);
+    // Using custom functional interfaces for filtering and actions
+        PersonRule isActive = p -> p.isActive();
+
+        PersonRule livesInStockholm = p -> p.getCity().equals("Stockholm");
+
+        PersonRule isAdult = p -> p.getAge() >= 18;
+        List<Person> adults = filterPeople(people, isAdult);
+        PersonAction printName = p -> System.out.println(p.getName());
+        for (Person p : adults) {
+            printName.execute(p);
+        }
+
+        // Using predefined functional interfaces for filtering and actions
+        List<Person>activePeople =
+                people.stream()
+                        .filter(Person::isActive)
+                        .toList();
+
+        long adaultCount =
+                people.stream()
+                        .filter(p -> p.getAge() >= 18)
+                        .count();
+        List<Person> sortedByAge =
+                people.stream()
+                        .sorted(Comparator.comparingInt(Person::getAge))
+                        .toList();
+
+        Optional<Person> firstActiveInStockholm =
+                people.stream()
+                        .filter(Person::isActive)
+                        .filter(p -> p.getCity().equals("Stockholm"))
+                        .findFirst();
+
+        // Multiple Filterring Methods
+
+        List<Person> activeAdults =
+                people.stream()
+                        .filter(p -> p.isActive() && p.getAge() >= 18)
+                        .toList();
+
+        List<Person> adultsOrInStockholm =
+                people.stream()
+                        .filter(p -> p.getAge() >= 18 || p.getCity().equals("Stockholm"))
+                        .toList();
+
+        List<Person> inActivePeople =
+                people.stream()
+                        .filter(p -> !p.isActive())
+                        .filter(p -> p.getAge() >= 18)
+                        .toList();
+
+        List<String> cities =
+                people.stream()
+                        .map(Person::getCity)
+                        .distinct()
+                        .sorted()
+                        .toList();
+
+        List<String> firstLetters =
+                people.stream()
+                        .map(p -> p.getName().substring(0, 1))
+                        .distinct()
+                        .sorted()
+                        .toList();
+
+        List<String> formatted =
+                people.stream()
+                        .map(p -> p.getName() + " (" + p.getAge() + ") - " + p.getCity())
+                        .toList();
+
+        List<String> emailList =
+                people.stream()
+                        .map(p -> p.getName().toLowerCase() + "@example.com")
+                        .toList();
+    }
+
+    public static List<Person> filterPeople(List<Person> people, PersonRule rule) {
+        List<Person> result = new ArrayList<>();
+        for (Person person : people) {
+            if (rule.test(person)) {
+                result.add(person);
+            }
+        }
+        return result;
         }
     /*
-        // Rules using lambda expressions for filtering
+        // Peronal Rules for filtering using lambda expressions
         PersonRule isActive = person -> person.isActive();
         PersonRule isAdult = person -> person.getAge() >= 18;
         PersonRule livesInStockholm = person -> person.getCity().equals("Stockholm");
-*/
-        // Using predefined method for filtering
+
+        // Personal Rules for actions using lambda expressions
+        PersonAction printName = person -> System.out.println(person.getName());
+        PersonAction sendEmail = person -> System.out.println("Send email to " + person.getName());};
+
+        //CombinedRules active AND adult
+        PersonRule activeAndAdult = p -> isActive.test(p) && isAdult.test(p);
+
+        // adult OR lives in Stockholm
+        PersonRule adultOrStockholm = p -> isAdult.test(p) || livesInStockholm.test(p);
+
+        // NOT active
+        PersonRule notActive = p -> !isActive.test(p);
+     */
+
+        // Using Java's predefined functional interfaces for filtering and actions
         Predicate<Person> isActive = person -> person.isActive();
         Predicate<Person> isAdult = person -> person.getAge() >= 18;
         Predicate<Person> livesInStockholm = person -> person.getCity().equals("Stockholm");
 
-    /*
-        // Rules using lambda expressions for actions
-        PersonAction printNameAction = person -> {
-            System.out.println("Printing name to: " + person.getName());
-        };
-
-       PersonAction emailAction = person -> {
+        Consumer<Person> sendEmailAction = person -> {
             System.out.println("Sending email to: " + person.getName());
         };
 
-        PersonAction combinedAction = person -> {
-            System.out.println("Printing name to: " + person.getName());
-            System.out.println("Sending email to: " + person.getName());
-        };
-    */
 
-        Consumer<Person> printNameActionConsumer = person -> {
-            System.out.println("Printing name to: " + person.getName());
-        };
 
-        Consumer<Person> emailActionConsumer = person -> {
-            System.out.println("Sending email to: " + person.getName());
-        };
-
-        Consumer<Person> combinedActionConsumer = person -> {
-            System.out.println("Printing name to: " + person.getName());
-            System.out.println("Sending email to: " + person.getName());
-        };
-
-        /*
-        // Using predefined method for actions
-        PersonAction printNameAction = person -> {
-            System.out.println("Printing name to: " + person.getName());
-        };
-
-        PersonAction emailAction = person -> {
-            System.out.println("Sending email to: " + person.getName());
-        };
-
-        PersonAction combinedAction = person -> {
-            System.out.println("Printing name to: " + person.getName());
-            System.out.println("Sending email to: " + person.getName());
-        };
-        */
-
-    // Rules using lambda expressions for processing
-        System.out.println(".................Active people:..............");
-        List<Person> activePeople = PersonProcessor.findPeople(people, (Predicate<Person>) isActive);
-        activePeople.forEach(System.out::println);
-
-        System.out.println("..................Adults:.................");
-        List<Person> adultPeople = PersonProcessor.findPeople(people, (Predicate<Person>) isAdult);
-        adultPeople.forEach(System.out::println);
-
-        System.out.println("......Adults from Stockholm:.....");
-        List<Person> stockholmAdults = PersonProcessor.findPeople(people, (person) -> isAdult.test(person) && livesInStockholm.test(person));
-        stockholmAdults.forEach(System.out::println);
-
-       // System.out.println("......Applying combined action to active people:.....");
-        //PersonProcessor.applyToMatching(people, (Predicate<Person>) isActive, combinedAction);
-
-        System.out.println("......Names of active people:.....");
-        people.stream()
-                .filter(isActive) // predicate to filter active people
-                .map(person -> person.getName())
-                .forEach(System.out::println);
-
-        System.out.println("......Names of all people:.....");
-        people.stream() // mapping all people to their names
-                .map(person -> person.getName())
-                .forEach(System.out::println);
-
-        System.out.println("......Count of adults:.....");
-        long adultCount = people.stream()
-                .filter(isAdult)
-                .count();
-        System.out.println("Number of adults: " + adultCount);
-
-        System.out.println("......People sorted by age:.....");
-        List<Person> sortedPeople = people.stream()
-                .sorted(Comparator.comparingInt(Person::getAge))
-                .collect(Collectors.toList());
-        sortedPeople.forEach(System.out::println);
-
-        System.out.println("......Find first active person in Stockholm:.....");
-        Optional<Person> firstActiveInStockholm = people.stream()
-                .filter(isActive)
-                .filter(person -> person.getCity().equals("Stockholm"))
-                .findFirst();
-        firstActiveInStockholm.ifPresent(person -> System.out.println("First active person in Stockholm: " + person));
-
-    }
-
-    // Imperative Style
-    public static List<Person> filterPeople(List<Person> people, PersonRule filter) {
-        List<Person> filteredPeople = new ArrayList<>();
-        for (Person person : people) {
-            if (filter.apply(person)) {
-                filteredPeople.add(person);
-            }
-        }
-        return filteredPeople;
-    }
 }

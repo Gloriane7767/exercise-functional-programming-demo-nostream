@@ -2,7 +2,7 @@ package com.gloriane;
 
 @FunctionalInterface
 public interface PersonRule {
-    boolean apply(Person person);
+    boolean test(Person person);
 }
 /*
 This is like asking a yes/no question about a person. It's a contract that says "I can test any person and give you true or false."

@@ -3,11 +3,15 @@ package com.gloriane;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 public class PersonProcessor { //replace PersonRule with Predicate<Person>
-    public static List<Person> findPeople(List<Person> list, Predicate<Person> rule) {
+    public static List<Person> findPeople(
+            List<Person> people,
+    PersonRule rule
+    ) {
         List<Person> result = new ArrayList<>();
-        for (Person person : list) {
+        for (Person person : people) {
             if (rule.test(person)) {
                 result.add(person);
             }
@@ -15,19 +19,27 @@ public class PersonProcessor { //replace PersonRule with Predicate<Person>
         return result;
     }
 // same here
-    public static void applyToMatching(List<Person> list, Predicate<Person> rule, PersonAction action) {
-        for (Person person : list) {
+    public static void applyToMatching(
+            List<Person> people,
+            PersonRule rule,
+            PersonAction action
+    ) {
+        for (Person person : people) {
             if (rule.test(person)) {
-                action.perform(person);
+                action.execute(person);
             }
         }
     }
 
     /*
  4. PersonProcessor Class - The Worker
-This class does the actual work:
-findPeople(): Takes a list of people and a rule, returns only people who pass the test
-applyToMatching(): Takes a list, finds people who match a rule, then performs an action on them
+This method:
+Loops through people
+Applies the rule
+Keeps only matching ones
+Look at each person
+Ask the rule a question
+If answer = true, keep them
      */
 }
 

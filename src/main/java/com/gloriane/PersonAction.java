@@ -2,7 +2,7 @@ package com.gloriane;
 
 @FunctionalInterface
 public interface PersonAction {
-    void perform(Person person);
+    void execute(Person person);
 }
 /*
 3. PersonAction Interface - The Do Something
