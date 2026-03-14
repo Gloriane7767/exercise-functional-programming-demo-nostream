@@ -2,14 +2,9 @@ package com.gloriane;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.function.Consumer;
 
 public class PersonProcessor { //replace PersonRule with Predicate<Person>
-    public static List<Person> findPeople(
-            List<Person> people,
-    PersonRule rule
-    ) {
+    public static List<Person> findPeople(List<Person> people, PersonRule rule) {
         List<Person> result = new ArrayList<>();
         for (Person person : people) {
             if (rule.test(person)) {
@@ -18,12 +13,9 @@ public class PersonProcessor { //replace PersonRule with Predicate<Person>
         }
         return result;
     }
+
 // same here
-    public static void applyToMatching(
-            List<Person> people,
-            PersonRule rule,
-            PersonAction action
-    ) {
+    public static void applyToMatching(List<Person> people, PersonRule rule, PersonAction action) {
         for (Person person : people) {
             if (rule.test(person)) {
                 action.execute(person);
