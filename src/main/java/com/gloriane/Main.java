@@ -17,9 +17,8 @@ public class Main {
                 new Person("Lina", 41, "Malmö", false),
                 new Person("Omar", 19, "Stockholm", true)
         );
-
+/*
         // ── SECTION 1: Custom functional interfaces (PersonRule & PersonAction) ──
-
         PersonRule isActiveRule = p -> p.isActive();           // lambda: true if person.isActive() e.g. Amina -> true
         PersonRule isAdultRule = p -> p.getAge() >= 18;        // lambda: true if age >= 18, e.g. Erik(17) -> false, Amina(22) -> true
         PersonRule livesInStockholmRule = p -> p.getCity().equals("Stockholm"); // lambda: true if city is Stockholm, e.g. Noah -> true
@@ -51,9 +50,8 @@ public class Main {
             sendEmail.execute(p);
         }
         System.out.println();
-
+*/
         // ── SECTION 2: Built-in Predicate & Consumer ──
-
         Predicate<Person> isActive = p -> p.isActive();                          // lambda: e.g. Amina -> true, Noah -> false
         Predicate<Person> isAdult = p -> p.getAge() >= 18;                      // lambda: e.g. Erik(17) -> false, Sara(29) -> true
         Predicate<Person> livesInStockholm = p -> p.getCity().equals("Stockholm"); // lambda: e.g. Amina -> true, Sara -> false
